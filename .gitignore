@@ -1,0 +1,12 @@
+# Ganze Ordner komplett ignorieren
+/certbot/
+/data/
+/jenkins_home/
+
+# Oder alternativ (relativer Pfad)
+certbot/
+data/
+jenkins_home/
+
+# .env Datei
+.env
