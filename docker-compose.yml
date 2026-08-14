@@ -6,7 +6,7 @@
     ports:
       - "80:80"
       - "443:443"
-    env-file: public.env
+    env_file: public.env
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
       - ./nginx/html:/usr/share/nginx/html:ro
@@ -31,7 +31,9 @@
     image: jenkins/jenkins:lts
     container_name: jenkins
     restart: unless-stopped
+    ports:
+      - "8000:8000"
     environment:
-      - JENKINS_OPTS=--httpPort=8080
+      - JENKINS_OPTS=--httpPort=8000 --prefix=/jenkins
     volumes:
       - ./jenkins_home:/var/jenkins_home
