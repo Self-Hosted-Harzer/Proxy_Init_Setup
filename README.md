@@ -50,6 +50,7 @@ chown -R cedric:cedric ~/.ssh/
     - ganz unten hinzufügen: `unqualified-search-registries = ["docker.io"]`
 - rootles portbinding ab port 80: `sudo sysctl net.ipv4.ip_unprivileged_port_start=80`
 - podman für user aktivieren: `systemctl --user enable --now podman.socket`
+- und netzwerk global erstellen: `podman network create mynet`
 
 ## SSL im vps-dinge repo
 - bei nginx server port 80: nur den acme teil drinne lassen
