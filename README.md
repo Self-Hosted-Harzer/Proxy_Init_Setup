@@ -62,45 +62,57 @@ podman run -it --rm   --network mynet   -v ./certbot/conf:/etc/letsencrypt   -v 
 - dannach restliche nginx.conf wieder einbinden
 - eventuell hash summen als cloudflare record TXT eintragen, um domain zu verifizieren
 
+## BasicAuth im repo
+- `sudo apt install -y apache2-utils`
+- `htpasswd -c ./nginx/auth/martin.htpasswd martin`
+
 ## jenkins
 - wenn jenkis nicht startet wegen permission denied im jenkins_home ordner: `sudo chown -R cedric ./jenkins_home`
 =======
 - dannach restliche nginx.conf wieder einbinden
+- für ssh aus jenkins container raus: 
+```
+ssh-keygen -t ed25519 -f ~/.ssh/jenkins_deploy -N ""
+cat ~/.ssh/jenkins_deploy.pub >> ~/.ssh/authorized_keys
+```
+- in jenkins: → Manage Jenkins → Credentials → System → Global credentials → Add Credentials
+- username: von host (cedric), private key: .ssh/jenkins_deploy cat eintragen
+- SSH Agent Plugin installieren
 
-### Pipeline einrichten
-Jenkins aus administrativer Sicht
-Einrichtung
 
+
+### Pipeline einrichten (von Anfang an)
 Zunächst muss ein Jenkins Server eingerichtet werden. Für diesen sollte diese Grundlage verwendet werden. Es wird angenommen, dass ein vorgeschalteter HTTP-Server existiert, der Anfragen mittels Reverse-Proxy weiterleitet.
 
 Dann wird ein Admin-Account angelegt.
 
-Um Jenkins Zugriff auf die relevanten Repos zu gestatten muss eine GitHub App eingerichtet werden. (es kann bei Nachfrage auch die bestehende auf einen neuen Besitzer übertragen werden)
+Um Jenkins Zugriff auf die relevanten Repos zu gestatten muss eine GitHub App eingerichtet werden. 
 
-    GitHub.com öffnen
-    Profilbild oben rechts wählen
-    Settings wählen
-    Developer settings wählen
-    auf vorausgewähltem GitHub Apps Tab bleiben oder zu diesem wechseln
-    New GitHub App wählen
-    Sinnvollen GitHub App name wählen (z.B. Jenkins-WS25Teamprojekt; Achtung: Dieser muss global eindeutig sein)
-    Homepage URL (beliebig z.B. URL der Jenkins-Instanz)
-    Callback URL (beliebig, da keine Verwendung)
-    Webhook Active abgeschaltet lassen (betreffen Events bezüglich der Anwendung selbst)
-    Permissions hinzufügen (ausschließlich Repository permissions notwendig):
-        Checks (Read and write)
-        Contents (Read-only)
-        Webhooks (Read and write)
-    Scope der Anwendung (Where can this GitHub App be installed) auf "Any account" stellen, um in der Organisation installieren zu können
-    Create GitHub App wählen
+- GitHub.com öffnen
+- Profilbild oben rechts wählen
+- Settings wählen
+- Developer settings wählen
+- auf vorausgewähltem GitHub Apps Tab bleiben oder zu diesem wechseln
+- New GitHub App wählen
+- Sinnvollen GitHub App name wählen (z.B. Jenkins-WS25Teamprojekt; Achtung: Dieser muss global eindeutig sein)
+- Homepage URL (beliebig z.B. URL der Jenkins-Instanz)
+- Callback URL (beliebig, da keine Verwendung)
+- Webhook Active abgeschaltet lassen (betreffen Events bezüglich der Anwendung selbst)
+- Permissions hinzufügen (ausschließlich Repository permissions notwendig):
+- Checks 
+    - (Read and write)
+    - Contents (Read-only)
+    - Webhooks (Read and write)
+- Scope der Anwendung (Where can this GitHub App be installed) auf "Any account" stellen, um in der Organisation installieren zu können
+- Create GitHub App wählen
 
 Es muss außerdem ein Client secret und ein private key generiert werden um Jenkins zu erlauben im Namen dieser Anwendung zu handeln. Diese (sowie die App ID) muss Jenkins hinzugefügt werden:
 
-    Jenkins Einstellungen öffnen
-    Credentials wählen
-    System wählen
-    Global credentials (unrestriced) wählen
-    Add Credentials wählen
+- Jenkins Einstellungen öffnen
+- Credentials wählen
+- System wählen
+- Global credentials (unrestriced) wählen
+- Add Credentials wählen
     GitHub App als Kind auswählen
     ID wählen (z.B. github-app)
     App ID mit App ID aus GitHub Seite füllen

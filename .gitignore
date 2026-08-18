@@ -10,3 +10,5 @@ jenkins_home/
 
 # .env Datei
 .env
+*.htpasswd
+martin.htpasswd
