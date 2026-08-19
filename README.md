@@ -29,7 +29,7 @@ chown -R cedric:cedric ~/.ssh/
 
 5. dann mit `kitty +kitten ssh name@ip`korekt von laptop aus verbinden
 
-## firewall
+## Firewall
 - mit ufw
 - `sudo ufw default deny incoming`
 - `sudo ufw allow 22/tcp` --> ssh
@@ -66,7 +66,7 @@ podman run -it --rm   --network mynet   -v ./certbot/conf:/etc/letsencrypt   -v 
 - `sudo apt install -y apache2-utils`
 - `htpasswd -c ./nginx/auth/martin.htpasswd martin`
 
-## jenkins
+## Jenkins
 - wenn jenkis nicht startet wegen permission denied im jenkins_home ordner: `sudo chown -R cedric ./jenkins_home`
 =======
 - dannach restliche nginx.conf wieder einbinden
@@ -106,19 +106,19 @@ Um Jenkins Zugriff auf die relevanten Repos zu gestatten muss eine GitHub App ei
 - Scope der Anwendung (Where can this GitHub App be installed) auf "Any account" stellen, um in der Organisation installieren zu können
 - Create GitHub App wählen
 
-Es muss außerdem ein Client secret und ein private key generiert werden um Jenkins zu erlauben im Namen dieser Anwendung zu handeln. Diese (sowie die App ID) muss Jenkins hinzugefügt werden:
+Es muss außerdem ein Client secret und ein private key generiert werden um Jenkins zu erlauben im Namen dieser Anwendung zu handeln. Diese (sowie die App ID) muss Jenkins hinzugefügt werden.
 
 - Jenkins Einstellungen öffnen
 - Credentials wählen
 - System wählen
 - Global credentials (unrestriced) wählen
 - Add Credentials wählen
-    GitHub App als Kind auswählen
-    ID wählen (z.B. github-app)
-    App ID mit App ID aus GitHub Seite füllen
-    Private Key einfügen
-        Konvertieren mittels openssl pkcs8 -topk8 -inform PEM -outform PEM -in foobar.private-key.pem -out new-key.pem -nocrypt
-        korrektes Format:
+- GitHub App als Kind auswählen
+- ID wählen (z.B. github-app)
+- App ID mit App ID aus GitHub Seite füllen
+- Private Key einfügen
+- Konvertieren mittels `openssl pkcs8 -topk8 -inform PEM -outform PEM -in foobar.private-key.pem -out new-key.pem -nocrypt`
+    - korrektes Format:
 
         -----BEGIN PRIVATE KEY-----
         XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX
@@ -151,43 +151,41 @@ Es muss außerdem ein Client secret und ein private key generiert werden um Jenk
 
 Nun kann die App den relevanten Repositories hinzugefügt (installiert) werden:
 
-    Zu der App auf GitHub navigieren (siehe oben)
-    Install App Tab wählen
-    Organisation wählen und Install oder Zahnrad wählen
-    Repositories auswählen und bestätigen
+- Zu der App auf GitHub navigieren (siehe oben)
+- Install App Tab wählen
+- Organisation wählen und Install oder Zahnrad wählen
+- Repositories auswählen und bestätigen
 
 Damit Jenkins Updates von GitHub erhalten kann muss der sog. WebHook-Mechanismus eingerichtet werden. Hierfür muss ein Credential generiert (zum Beispiel mit einem Passwortgenerator) und sowohl in Jenkins als auch im GitHub Repository eingestellt werden.
 
 Zunächst die Einrichtung unter Jenkins:
-
-    Jenkins Einstellungen öffnen
-    Credentials wählen
-    System wählen
-    Global credentials (unrestriced) wählen
-    Add Credentials wählen
-    Secret text als Kind wählen
-    Secret eintragen
-    ID wählen (z.B. github-webhook)
-    Create wählen
+- Jenkins Einstellungen öffnen
+- Credentials wählen
+- System wählen
+- Global credentials (unrestriced) wählen
+- Add Credentials wählen
+- Secret text als Kind wählen
+- Secret eintragen
+- ID wählen (z.B. github-webhook)
+- Create wählen
 
 Nun muss dieses Secret als WebHook-Secret eingestellt werden:
-
-    Jenkins Einstellungen öffnen
-    System wählen
-    zu GitHub scrollen
-    Advanced aufklappen
-    Unter Shared secret das vorher erstellte GitHub WebHook Secret wählen
-    Signature algorithm auf SHA-256 stellen
+- Jenkins Einstellungen öffnen
+- System wählen
+- zu GitHub scrollen
+- Advanced aufklappen
+- Unter Shared secret das vorher erstellte GitHub WebHook Secret wählen
+- Signature algorithm auf SHA-256 stellen
 
 Nun kann WebHooks für einzelne Jobs eingerichtet werden.
 
-Um einen Job automatisch durch pushes zu starten, muss der Haken bei GitHub project gesetzt und die URL gesetz werden (z.B. https://github.com/WS25Teamprojekt/mkdocs_internal_stundenplan/)
+Um einen Job automatisch durch pushes zu starten, muss der Haken bei GitHub project gesetzt und die URL gesetz werden (z.B. https://github.com/WS25Teamprojekt/mkdocs_internal_stundenplan.git)
 
 Zusätzlich muss ein Haken unter Triggers bei "GitHub hook trigger for GITscm polling" gesetzt werden.
 
 Außerdem müssen die App Credentials eingestellt werden, um Lesezugriff auf private Repos zu erlauben.
 
-Hierfür muss unter Pipeline -> Definition "Pipeline script from SCM" eingestellt werden. Unter SCM Git wählen, die Repository URL eintragen (z.B. https://github.com/WS25Teamprojekt/mkdocs_external_stundenplan) und schließlich die App Credentials gewählt werden. Wenn der Hauptbranch nicht master sonder main heißt muss unter Branches to build */master zu */main abgeändert werden.
+Hierfür muss unter Pipeline -> Definition "Pipeline script from SCM" eingestellt werden. Unter SCM Git wählen, die Repository URL eintragen (z.B. https://github.com/WS25Teamprojekt/mkdocs_external_stundenplan.git) und schließlich die App Credentials gewählt werden. Wenn der Hauptbranch nicht master sonder main heißt muss unter Branches to build */master zu */main abgeändert werden.
 
 Außerdem muss eventuell der Script Path geändert werden, wenn die Jenkinsdatei nicht im Root-Verzeichnis liegt und Jenkinsfile heißt.
 
