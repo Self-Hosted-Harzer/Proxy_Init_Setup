@@ -1,0 +1,39 @@
+services:
+  traefik:
+      image: traefik:v3.6
+      container_name: traefik
+      restart: unless-stopped
+      command:
+        - "--configFile=/etc/traefik/traefik.yml"
+        - "--log.level=DEBUG"  # WICHTIG: Debug-Logs für Fehlersuche
+      ports:
+        - "9000:9000"
+        - "9001:9001"
+      env_file: .env
+      volumes:
+        - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro,Z
+        - ./traefik.yml:/etc/traefik/traefik.yml:ro,Z
+        - ./letsencrypt:/letsencrypt:Z
+      networks:
+        - mynet
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dashboard.rule=Host(`micedric.dpdns.org`)"
+        - "traefik.http.routers.dashboard.entrypoints=websecure"
+        - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
+        - "traefik.http.routers.dashboard.middlewares=myauth@file"
+        - "traefik.http.routers.dashboard.service=api@internal"
+        - "traefik.http.middlewares.dashboard-auth.basicauth.users=${BASIC_AUTH}"
+        - "traefik.http.routers.dashboard.middlewares=dashboard-auth@docker"
+
+  sablier:
+    image: sablierapp/sablier:latest
+    container_name: sablier
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--provider.name=docker"
+    volumes:
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro,Z
+    networks:
+      - mynet

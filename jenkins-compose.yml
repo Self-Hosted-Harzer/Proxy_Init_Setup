@@ -1,0 +1,36 @@
+  services:
+    jenkinsb:
+      image: jenkins/jenkins:lts
+      container_name: jenkinsb
+      restart: unless-stopped
+      networks:
+        - mynet
+      environment:
+        - JENKINS_OPTS=--httpPort=8080 
+      volumes:
+        - ./jenkins_home:/var/jenkins_home
+
+      labels:
+        - "traefik.enable=true"
+
+        # Routing / Subdomain
+        - "traefik.http.routers.jenkins.rule=Host(`jenkins.micedric.dpdns.org`)"
+        - "traefik.http.routers.jenkins.entrypoints=websecure"
+        - "traefik.http.routers.jenkins.tls.certresolver=myresolver"
+        - "traefik.http.routers.jenkins.middlewares=vue-frontend-sablier"
+        - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
+
+        # Sablier: Container darf trotz Stopp im Routing bleiben (Traefik >= v3.6 nötig)
+        - "traefik.docker.allownonrunning=true"
+
+        # Sablier-Gruppierung
+        - "sablier.enable=true"
+        - "sablier.group=jenkins"
+
+        # Sablier-Middleware-Konfiguration (Traefik-Plugin)
+        - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.group=jenkins"
+        - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.sablierUrl=http://sablier:10000"
+        - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.sessionDuration=60m"
+        - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.dynamic.displayName=Jenkins"
+        - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.dynamic.theme=ghost"
+        - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.dynamic.refreshFrequency=3s"
