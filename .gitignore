@@ -19,3 +19,4 @@ letsencrypt
 .env
 *.htpasswd
 martin.htpasswd
+wasm
