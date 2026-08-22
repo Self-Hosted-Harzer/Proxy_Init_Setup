@@ -51,6 +51,9 @@ chown -R cedric:cedric ~/.ssh/
 - rootles portbinding ab port 80: `sudo sysctl net.ipv4.ip_unprivileged_port_start=80`
 - podman für user aktivieren: `systemctl --user enable --now podman.socket`
 - und netzwerk global erstellen: `podman network create mynet`
+- `sudo loginctl enable-linger cedric`
+- `systemctl --user enable podman.service`
+- `systemctl --user start podman.service`
 
 ## SSL im vps-dinge repo
 - bei nginx server port 80: nur den acme teil drinne lassen
@@ -65,6 +68,11 @@ podman run -it --rm   --network mynet   -v ./certbot/conf:/etc/letsencrypt   -v 
 ## BasicAuth im repo
 - `sudo apt install -y apache2-utils`
 - `htpasswd -c ./nginx/auth/martin.htpasswd martin`
+
+## Sablier
+- `wget -O nginx/wasm/sablierproxywasm.wasm \
+  https://github.com/sablierapp/sablier-proxywasm-plugin/releases/download/v1.1.0/sablier-proxywasm-plugin.wasm`
+- `ls -lh nginx/wasm/sablierproxywasm.wasm`
 
 ## Jenkins
 - wenn jenkis nicht startet wegen permission denied im jenkins_home ordner: `sudo chown -R cedric ./jenkins_home`

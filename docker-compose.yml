@@ -1,9 +1,7 @@
 services:
   nginx:
     image: nginx:latest
-    container_name: nginx
-    depends_on: 
-      - jenkins
+    container_name: nginx 
     restart: unless-stopped
     ports:
       - "80:80"
@@ -13,6 +11,7 @@ services:
     env_file: public.env
     volumes:
       - ./nginx/nginx.conf:/etc/nginx/conf.d/default.conf:ro
+     # - ./nginx/nginx-main.conf:/etc/nginx/nginx.conf:ro
       - ./nginx/html:/usr/share/nginx/html:ro
       - ./certbot/www:/var/www/certbot:ro
       - ./certbot/conf:/etc/letsencrypt:ro
@@ -33,6 +32,20 @@ services:
         sleep 12h & wait $${!};
       done"
 
+
+
+  kuma:
+    image: louislam/uptime-kuma:latest
+    container_name: kuma 
+    restart: unless-stopped
+    ports: 
+      - "3001:3001"
+    volumes: 
+      - ./kuma_data:/app/data
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
+    networks:
+      - mynet
+
   jenkins:
     image: jenkins/jenkins:lts
     container_name: jenkins
@@ -43,6 +56,93 @@ services:
       - JENKINS_OPTS=--httpPort=8080 
     volumes:
       - ./jenkins_home:/var/jenkins_home
+
+
+
+
+
+
+
+
+
+
+  traefik:
+      image: traefik:v3.6
+      container_name: traefik
+      restart: unless-stopped
+      command:
+        - "--configFile=/etc/traefik/traefik.yml"
+        - "--log.level=DEBUG"  # WICHTIG: Debug-Logs für Fehlersuche
+      ports:
+        - "9000:9000"
+        - "9001:9001"
+      env_file: .env
+      volumes:
+        - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro,Z
+        - ./traefik.yml:/etc/traefik/traefik.yml:ro,Z
+        - ./letsencrypt:/letsencrypt:Z
+        - ./basic_auth/traefik.htpasswd:/etc/traefik/basic_auth/traefik.htpasswd:ro
+      networks:
+        - mynet
+      labels:
+        - "traefik.enable=true"
+        - "traefik.http.routers.dashboard.rule=Host(`micedric.dpdns.org`)"
+        - "traefik.http.routers.dashboard.entrypoints=websecure"
+        - "traefik.http.routers.dashboard.tls.certresolver=myresolver"
+        - "traefik.http.routers.dashboard.middlewares=myauth@file"
+        - "traefik.http.routers.dashboard.service=api@internal"
+        - "traefik.http.middlewares.dashboard-auth.basicauth.users=${BASIC_AUTH}"
+        - "traefik.http.routers.dashboard.middlewares=dashboard-auth@docker"
+
+  sablier:
+    image: sablierapp/sablier:latest
+    container_name: sablier
+    restart: unless-stopped
+    command:
+      - "start"
+      - "--provider.name=docker"
+    volumes:
+      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro,Z
+    networks:
+      - mynet
+      
+  jenkins:
+    image: jenkins/jenkins:lts
+    container_name: jenkins
+    restart: unless-stopped
+    networks:
+      - mynet
+    environment:
+      - JENKINS_OPTS=--httpPort=8080 
+    volumes:
+      - ./jenkins_home:/var/jenkins_home
+
+    labels:
+      - "traefik.enable=true"
+
+      # Routing / Subdomain
+      - "traefik.http.routers.jenkins.rule=Host(`jenkins.micedric.dpdns.org`)"
+      - "traefik.http.routers.jenkins.entrypoints=websecure"
+      - "traefik.http.routers.jenkins.tls.certresolver=myresolver"
+      - "traefik.http.routers.jenkins.middlewares=vue-frontend-sablier"
+      - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
+
+      # Sablier: Container darf trotz Stopp im Routing bleiben (Traefik >= v3.6 nötig)
+      - "traefik.docker.allownonrunning=true"
+
+      # Sablier-Gruppierung
+      - "sablier.enable=true"
+      - "sablier.group=jenkins"
+
+      # Sablier-Middleware-Konfiguration (Traefik-Plugin)
+      - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.group=jenkins"
+      - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.sablierUrl=http://sablier:10000"
+      - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.sessionDuration=60m"
+      - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.dynamic.displayName=Jenkins"
+      - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.dynamic.theme=ghost"
+      - "traefik.http.middlewares.jenkins-sablier.plugin.sablier.dynamic.refreshFrequency=3s"
+
+
 
 networks:
   mynet:
