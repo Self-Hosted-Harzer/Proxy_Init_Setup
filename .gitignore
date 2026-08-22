@@ -8,6 +8,13 @@ certbot/
 data/
 jenkins_home/
 
+kuma_data
+kuma_data/ 
+/kuma_data/
+
+
+letsencrypt
+
 # .env Datei
 .env
 *.htpasswd
