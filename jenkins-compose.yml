@@ -1,7 +1,7 @@
   services:
-    jenkinsb:
+    jenkins:
       image: jenkins/jenkins:lts
-      container_name: jenkinsb
+      container_name: jenkins
       restart: unless-stopped
       networks:
         - mynet
@@ -17,7 +17,7 @@
         - "traefik.http.routers.jenkins.rule=Host(`jenkins.micedric.dpdns.org`)"
         - "traefik.http.routers.jenkins.entrypoints=websecure"
         - "traefik.http.routers.jenkins.tls.certresolver=myresolver"
-        - "traefik.http.routers.jenkins.middlewares=vue-frontend-sablier"
+        - "traefik.http.routers.jenkins.middlewares=jenkins-sablier"
         - "traefik.http.services.jenkins.loadbalancer.server.port=8080"
 
         # Sablier: Container darf trotz Stopp im Routing bleiben (Traefik >= v3.6 nötig)

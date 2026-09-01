@@ -5,7 +5,6 @@ services:
       restart: unless-stopped
       command:
         - "--configFile=/etc/traefik/traefik.yml"
-        - "--log.level=DEBUG"  # WICHTIG: Debug-Logs für Fehlersuche
       ports:
         - "9000:9000"
         - "9001:9001"

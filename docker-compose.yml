@@ -39,29 +39,6 @@ services:
 
 
 
-  kuma:
-    image: louislam/uptime-kuma:latest
-    container_name: kuma 
-    restart: unless-stopped
-    ports: 
-      - "3001:3001"
-    volumes: 
-      - ./kuma_data:/app/data
-      - /run/user/1000/podman/podman.sock:/var/run/docker.sock:ro
-    networks:
-      - mynet
-
-  jenkins:
-    image: jenkins/jenkins:lts
-    container_name: jenkins
-    restart: unless-stopped
-    networks:
-      - mynet
-    environment:
-      - JENKINS_OPTS=--httpPort=8080 
-    volumes:
-      - ./jenkins_home:/var/jenkins_home
-
 
 
 
