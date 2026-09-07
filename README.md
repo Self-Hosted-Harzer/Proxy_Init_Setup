@@ -74,6 +74,12 @@ podman run -it --rm   --network mynet   -v ./certbot/conf:/etc/letsencrypt   -v 
   https://github.com/sablierapp/sablier-proxywasm-plugin/releases/download/v1.1.0/sablier-proxywasm-plugin.wasm`
 - `ls -lh nginx/wasm/sablierproxywasm.wasm`
 
+## Beszel Monitoring
+- zuerst nur beszel-hub starten
+- webui aufrufen und + Add System
+- bei ip/host den container namen des beszel agenten enintragen
+- token und key kopieren, und für agenten in .env datei eintragen
+
 ## Jenkins
 - wenn jenkis nicht startet wegen permission denied im jenkins_home ordner: `sudo chown -R cedric ./jenkins_home`
 =======

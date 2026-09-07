@@ -1,6 +1,7 @@
 include:
   - path: ./proxy-compose.yml
   - path: ./jenkins-compose.yml
+  - path: ./beszel-compose.yml
 
 
 services:

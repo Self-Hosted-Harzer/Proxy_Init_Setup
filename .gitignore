@@ -20,3 +20,7 @@ letsencrypt
 *.htpasswd
 martin.htpasswd
 wasm
+
+beszel_data
+beszel_socket
+beszel_agent_data
