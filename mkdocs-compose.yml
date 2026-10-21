@@ -1,0 +1,35 @@
+  services:
+    main_docs:
+      image: squidfunk/mkdocs-material
+      container_name: main_docs
+      restart: unless-stopped
+      networks:
+        - mynet
+      volumes:
+        - ./mk_docs/:/docs
+      command: serve -a 0.0.0.0:8000
+
+      labels:
+        - "traefik.enable=true"
+
+        # Routing / Subdomain
+        - "traefik.http.routers.mkdocs.rule=Host(`gameblog.micedric.dpdns.org`)"
+        - "traefik.http.routers.mkdocs.entrypoints=websecure"
+        - "traefik.http.routers.mkdocs.tls.certresolver=myresolver"
+        - "traefik.http.routers.mkdocs.middlewares=mkdocs-sablier"
+        - "traefik.http.services.mkdocs.loadbalancer.server.port=8000"
+
+        # Sablier: Container darf trotz Stopp im Routing bleiben (Traefik >= v3.6 nötig)
+        - "traefik.docker.allownonrunning=true"
+
+        # Sablier-Gruppierung
+        - "sablier.enable=true"
+        - "sablier.group=mkdocs"
+
+        # Sablier-Middleware-Konfiguration (Traefik-Plugin)
+        - "traefik.http.middlewares.mkdocs-sablier.plugin.sablier.group=mkdocs"
+        - "traefik.http.middlewares.mkdocs-sablier.plugin.sablier.sablierUrl=http://sablier:10000"
+        - "traefik.http.middlewares.mkdocs-sablier.plugin.sablier.sessionDuration=20m"
+        - "traefik.http.middlewares.mkdocs-sablier.plugin.sablier.dynamic.displayName=Mkdocs Game Blog"
+        - "traefik.http.middlewares.mkdocs-sablier.plugin.sablier.dynamic.theme=ghost"
+        - "traefik.http.middlewares.mkdocs-sablier.plugin.sablier.dynamic.refreshFrequency=3s"

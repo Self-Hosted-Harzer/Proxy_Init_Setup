@@ -1,43 +1,24 @@
 services:
   beszel-hub:
-    image: henrygd/beszel:latest
+    image: henrygd/beszel:0.21
     container_name: beszel-hub
     restart: unless-stopped
     networks:
       - mynet
     environment:
-      APP_URL: https://beszel.micedric.dpdns.org:9001
+      APP_URL: https://beszel.micedric.dpdns.org:8080
     volumes:
       - ./beszel_data:/beszel_data
       - ./beszel_socket:/beszel_socket
     labels:
       - "traefik.enable=true"
-
-      # Routing / Subdomain
       - "traefik.http.routers.beszel.rule=Host(`beszel.micedric.dpdns.org`)"
       - "traefik.http.routers.beszel.entrypoints=websecure"
       - "traefik.http.routers.beszel.tls.certresolver=myresolver"
-      - "traefik.http.routers.beszel.middlewares=beszel-sablier"
       - "traefik.http.services.beszel.loadbalancer.server.port=8090"
 
-      # Sablier: Container darf trotz Stopp im Routing bleiben (Traefik >= v3.6 nötig)
-      - "traefik.docker.allownonrunning=true"
-
-      # Sablier-Gruppierung
-      - "sablier.enable=true"
-      - "sablier.group=beszel"
-
-      # Sablier-Middleware-Konfiguration (Traefik-Plugin)
-      - "traefik.http.middlewares.beszel-sablier.plugin.sablier.group=beszel"
-      - "traefik.http.middlewares.beszel-sablier.plugin.sablier.sablierUrl=http://sablier:10000"
-      - "traefik.http.middlewares.beszel-sablier.plugin.sablier.sessionDuration=60m"
-      - "traefik.http.middlewares.beszel-sablier.plugin.sablier.dynamic.displayName=beszel"
-      - "traefik.http.middlewares.beszel-sablier.plugin.sablier.dynamic.theme=ghost"
-      - "traefik.http.middlewares.beszel-sablier.plugin.sablier.dynamic.refreshFrequency=3s"
-
-
   beszel-agent:
-    image: henrygd/beszel-agent:latest
+    image: henrygd/beszel-agent:0.21
     container_name: beszel-agent
     restart: unless-stopped
     networks:

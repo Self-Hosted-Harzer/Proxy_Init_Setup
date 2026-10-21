@@ -3,14 +3,14 @@ api:
 
 entryPoints:
   web:
-    address: ":9000"
+    address: ":80"
     http:
       redirections:
         entryPoint:
           to: websecure
           scheme: https
   websecure:
-    address: ":9001"
+    address: ":443"
 
 providers:
   docker:
