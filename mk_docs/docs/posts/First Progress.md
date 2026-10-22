@@ -5,7 +5,8 @@ categories:
     - Devlog
 ---
 
-# 2_Progress
+# First Progress!
+<!-- more -->
 I can now:
 
 - spawn a welcoming ui with exit, settings an start game button
@@ -20,3 +21,42 @@ I can now:
 - tooltip in inventory when hovering over items/recipes
 - create dynamically new items with assets
 
+
+d
+
+
+
+
+
+
+
+d
+
+
+
+
+
+d
+
+
+
+
+
+
+d
+dd
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+d

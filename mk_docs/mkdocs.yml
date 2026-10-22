@@ -13,6 +13,8 @@ theme:
   favicon: assets/favicon.png
   language: de
   font: false
+  features: 
+    - toc.integrate
   palette:
     - scheme: slate
       primary: deep purple
@@ -48,6 +50,7 @@ plugins:
   - blog:
       blog_dir: .          # index.md ist die Blog-Startseite
       post_date_format: long
+      blog_toc: true
   - git-revision-date-localized:
       type: datetime       # Datum + Uhrzeit der letzten Änderung
       timezone: Europe/Berlin
@@ -61,3 +64,6 @@ nav:
     - Datenschutz: datenschutz.md
     - Lizenz: lizenz.md
     - Haftungsausschluss: haftungsausschluss.md
+
+extra_css:
+  - assets/extra.css
