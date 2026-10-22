@@ -17,24 +17,3 @@
   height: calc(100vh - 6rem);
 }
 
-@media screen and (min-width: 76.25em) {
-  .md-content--post {
-    display: flex;
-    flex-direction: column;
-  }
-  .md-sidebar--post {
-    position: static;
-    width: auto;
-    height: auto;
-    order: -1;
-  }
-  .md-sidebar--post .md-sidebar__scrollwrap {
-    height: auto;
-    overflow: visible;
-  }
-  .md-post__meta {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 1.2rem;
-  }
-}

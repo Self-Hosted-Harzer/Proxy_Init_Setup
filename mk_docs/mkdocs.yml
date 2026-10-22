@@ -66,4 +66,4 @@ nav:
     - Haftungsausschluss: haftungsausschluss.md
 
 extra_css:
-  - assets/extra.css
+  - assets/extra_css.css
