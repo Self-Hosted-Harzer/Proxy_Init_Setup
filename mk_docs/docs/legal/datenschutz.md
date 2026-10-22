@@ -1,9 +1,3 @@
----
-date:
-  created: 2026-10-21
-categories:
-    - Legal
----
 # Datenschutzerklärung
 
 ## 1. Verantwortlicher

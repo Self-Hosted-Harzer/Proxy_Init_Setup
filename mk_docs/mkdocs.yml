@@ -3,10 +3,10 @@ site_url: https://gameblog.micedric.dpdns.org/
 
 copyright: >-
   © 2026 Cedric Wünsch ·
-  <a href="/impressum/">Impressum</a> ·
-  <a href="/datenschutz/">Datenschutz</a> ·
-  <a href="/lizenz/">Lizenz</a> ·
-  <a href="/haftungsausschluss/">Haftungsausschluss</a>
+  <a href="/legal/impressum/">Impressum</a> ·
+  <a href="/legal/datenschutz/">Datenschutz</a> ·
+  <a href="/legal/lizenz/">Lizenz</a> ·
+  <a href="/legal/haftungsausschluss/">Haftungsausschluss</a>
 
 theme:
   name: material
@@ -58,12 +58,12 @@ plugins:
 
 nav:
   - Blog: index.md
-  - Projekt: projekt.md
+  - Projekt: project/projekt.md
   - Rechtliches:
-    - Impressum: impressum.md
-    - Datenschutz: datenschutz.md
-    - Lizenz: lizenz.md
-    - Haftungsausschluss: haftungsausschluss.md
+    - Impressum: legal/impressum.md
+    - Datenschutz: legal/datenschutz.md
+    - Lizenz: legal/lizenz.md
+    - Haftungsausschluss: legal/haftungsausschluss.md
 
 extra_css:
   - assets/extra_css.css

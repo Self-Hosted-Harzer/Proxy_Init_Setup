@@ -1,9 +1,3 @@
----
-date:
-  created: 2026-10-21
-categories:
-    - Legal
----
 # Lizenz
 
 ## Inhalte des Blogs (Texte, Bilder, Grafiken)

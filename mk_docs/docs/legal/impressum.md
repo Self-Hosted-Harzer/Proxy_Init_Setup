@@ -1,9 +1,3 @@
----
-date:
-  created: 2026-10-21
-categories:
-    - Legal
----
 # Impressum
 
 ## Angaben gemäß § 5 DDG
