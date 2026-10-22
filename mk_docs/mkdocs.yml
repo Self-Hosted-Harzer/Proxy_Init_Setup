@@ -1,17 +1,6 @@
-
-
-nav:
-  - Home: index.md
-  - About: about.mk_docs
-
-
-
-
-
 site_name: "My LabyRinther Game Dev Blog (:"
 site_url: https://gameblog.micedric.dpdns.org/
 
-# Footer mit Impressum/Datenschutz auf JEDER Seite (Pflicht: leicht erreichbar)
 copyright: >-
   © 2026 Cedric Wünsch ·
   <a href="/impressum/">Impressum</a> ·
@@ -21,23 +10,25 @@ copyright: >-
 
 theme:
   name: material
+  favicon: assets/favicon.png
+  language: de
   font: false
   palette:
-    # Dunkles Schema (Beispiel: Slate)
     - scheme: slate
-      primary: deep purple      # Header/Farbe (z.B. indigo, teal, red, custom hex)
-      accent: lime              # Links, Buttons (z.B. amber, pink, cyan)
+      primary: deep purple
+      accent: lime
       toggle:
         icon: material/weather-sunny
-        name: Switch to light mode
-
-    # Helles Schema (optional für Toggle)
+        name: Zum hellen Modus wechseln
     - scheme: default
       primary: indigo
       accent: blue
       toggle:
         icon: material/weather-night
-        name: Switch to dark mode
+        name: Zum dunklen Modus wechseln
+  features:
+    - navigation.tabs
+    - content.code.copy
 
 extra:
   social:
@@ -45,11 +36,26 @@ extra:
       link: https://github.com/DEIN-USER/DEIN-REPO
       name: GitHub
 
+markdown_extensions:
+  - admonition
+  - pymdownx.details
+  - pymdownx.superfences
+  - attr_list
+  - md_in_html
+
 plugins:
   - search
+  - blog:
+      blog_dir: .          # index.md ist die Blog-Startseite
+      post_date_format: long
+  - git-revision-date-localized:
+      type: datetime       # Datum + Uhrzeit der letzten Änderung
+      timezone: Europe/Berlin
+      enable_creation_date: true
 
 nav:
   - Blog: index.md
+  - Projekt: projekt.md
   - Rechtliches:
     - Impressum: impressum.md
     - Datenschutz: datenschutz.md

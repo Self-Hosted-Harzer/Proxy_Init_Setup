@@ -5,10 +5,17 @@
       restart: unless-stopped
       networks:
         - mynet
+      working_dir: /repo/mk_docs
       volumes:
-        - ./mk_docs/:/docs
-      command: serve -a 0.0.0.0:8000
+        - ./:/repo
+      
+      environment:
+        # verhindert "dubious ownership", weil im Container ein anderer User als auf dem Host aktiv ist
+        GIT_CONFIG_COUNT: "1"
+        GIT_CONFIG_KEY_0: safe.directory
+        GIT_CONFIG_VALUE_0: "*"
 
+      command: serve -a 0.0.0.0:8000
       labels:
         - "traefik.enable=true"
 
