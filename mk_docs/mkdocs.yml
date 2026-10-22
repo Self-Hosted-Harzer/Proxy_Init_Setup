@@ -1,6 +1,57 @@
-site_name: "My Project Documentation"
-theme:
-  name: "material"
+
+
 nav:
   - Home: index.md
-  - About: about.md
+  - About: about.mk_docs
+
+
+
+
+
+site_name: "My LabyRinther Game Dev Blog (:"
+site_url: https://gameblog.micedric.dpdns.org/
+
+# Footer mit Impressum/Datenschutz auf JEDER Seite (Pflicht: leicht erreichbar)
+copyright: >-
+  © 2026 Cedric Wünsch ·
+  <a href="/impressum/">Impressum</a> ·
+  <a href="/datenschutz/">Datenschutz</a> ·
+  <a href="/lizenz/">Lizenz</a> ·
+  <a href="/haftungsausschluss/">Haftungsausschluss</a>
+
+theme:
+  name: material
+  font: false
+  palette:
+    # Dunkles Schema (Beispiel: Slate)
+    - scheme: slate
+      primary: deep purple      # Header/Farbe (z.B. indigo, teal, red, custom hex)
+      accent: lime              # Links, Buttons (z.B. amber, pink, cyan)
+      toggle:
+        icon: material/weather-sunny
+        name: Switch to light mode
+
+    # Helles Schema (optional für Toggle)
+    - scheme: default
+      primary: indigo
+      accent: blue
+      toggle:
+        icon: material/weather-night
+        name: Switch to dark mode
+
+extra:
+  social:
+    - icon: fontawesome/brands/github
+      link: https://github.com/DEIN-USER/DEIN-REPO
+      name: GitHub
+
+plugins:
+  - search
+
+nav:
+  - Blog: index.md
+  - Rechtliches:
+    - Impressum: impressum.md
+    - Datenschutz: datenschutz.md
+    - Lizenz: lizenz.md
+    - Haftungsausschluss: haftungsausschluss.md
